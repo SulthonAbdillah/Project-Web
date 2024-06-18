@@ -67,7 +67,7 @@
       <div class="shopping-cart">
         <template x-for="(item, index) in $store.cart.items" x-key="index">
           <div class="cart-item">
-            <img :src="`img/products/${item.img}`" :alt="item.name" />
+            <img :src="`img/menu/${item.img}`" :alt="item.name" />
             <div class="item-detail">
               <h3 x-text="item.name"></h3>
               <div class="item-price">
@@ -375,7 +375,7 @@
       <div class="modal-container">
         <a href="#" class="close-icon"><i data-feather="x"></i></a>
         <div class="modal-content">
-          <img src="img/products/1.jpg" alt="Product 1" />
+          <img src="img/menu/1.jpg" alt="Product 1" />
           <div class="product-content">
             <h3>Product 1</h3>
             <p>
@@ -410,5 +410,19 @@
 
     <!-- My Javascript -->
     <script src="js/script.js"></script>
+
+    <!-- Success Pop-up start -->
+<div class="modal" id="success-modal" x-data="{ show: false }" x-show="show">
+  <div class="modal-container">
+    <a href="#" class="close-icon" @click="show = false"><i data-feather="x"></i></a>
+    <div class="modal-content">
+      <h3>Purchase Successful!</h3>
+      <p>Your purchase has been completed successfully.</p>
+      <button @click="show = false">Close</button>
+    </div>
+  </div>
+</div>
+<!-- Success Pop-up end -->
+
   </body>
 </html>
