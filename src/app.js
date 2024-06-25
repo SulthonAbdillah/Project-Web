@@ -58,19 +58,14 @@ document.addEventListener("alpine:init", () => {
   document.getElementById('checkoutForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const customerData = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      phone: formData.get('phone')
+    const customer = {
+      user_id: 1,
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
     };
 
-    const cartData = Alpine.store('cart').items.map(item => ({
-      id: item.id,
-      name: item.name,
-      quantity: item.quantity,
-      total: item.total
-    }));
+    const cart = Alpine.store("cart").items;
 
     try {
       const response = await fetch('checkout.php', {
@@ -78,33 +73,21 @@ document.addEventListener("alpine:init", () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ customer: customerData, cart: cartData })
+        body: JSON.stringify({ customer, cart })
       });
 
       const result = await response.json();
 
       if (result.success) {
-        document.getElementById('success-modal').style.display = 'block';
-        Alpine.store('cart').items = [];
-        Alpine.store('cart').total = 0;
-        Alpine.store('cart').quantity = 0;
+        document.querySelector('#success-modal').style.display = 'block';
+        Alpine.store("cart").items = [];
+        Alpine.store("cart").total = 0;
+        Alpine.store("cart").quantity = 0;
       } else {
-        alert('Checkout failed: ' + result.message);
+        alert(result.message);
       }
     } catch (error) {
-      console.error('Error during checkout:', error);
+      console.error('Error:', error);
     }
   });
 });
-
-function closeModal() {
-  document.getElementById('success-modal').style.display = 'none';
-}
-
-const dollar = (number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(number);
-};
